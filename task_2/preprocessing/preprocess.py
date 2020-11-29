@@ -13,9 +13,10 @@ countries += ["ceska republika", "polska", "brasil", "international", "usa",
 def preprocess(company: str) -> str:
     company = company.lower()
 
-    legal_entities = ["ltd.", "co.rporation", "co.", "inc.", "b.v.", "s.c.r.l.", "gmbh",
-                      "pvt.", "s.a.", "de c.v.", "c.v.",
-                      "ооо", "оао"]
+    legal_entities = [r"ltd\.", r"co\.rporation", r"co\.", r"inc\.", r"b\.v\.",
+                      r"s\.c\.r\.l\.", r"gmbh", r"pvt\.", r"s\.a\.",
+                      r"de c\.v\.", r"c\.v\.", r"exp\.", r"llc", r"corp."
+                      r"ооо", r"оао"]
     company_regexp = rf"({'|'.join(legal_entities)})[\W]*"
     company = re.sub(company_regexp, '', company)
 
@@ -24,7 +25,7 @@ def preprocess(company: str) -> str:
     popular_words = ["энтерпрайс",
                      "industries", "industrial", "industria",
                      "international", "global", "logistics", "private",
-                     "corporation", "management"]
+                     "corporation", "management", "consolidated", "trading"]
 
     popular_regexp = rf"({'|'.join(popular_words)})[\W]*"
     company = re.sub(popular_regexp, '', company)
