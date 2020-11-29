@@ -13,7 +13,7 @@ countries += ["ceska republika", "polska", "brasil", "international", "usa",
 def preprocess(company: str) -> str:
     company = company.lower()
 
-    legal_entities = ["ltd.", "co.", "inc.", "b.v.", "s.c.r.l.", "gmbh",
+    legal_entities = ["ltd.", "co.rporation", "co.", "inc.", "b.v.", "s.c.r.l.", "gmbh",
                       "pvt.", "s.a.", "de c.v.", "c.v.",
                       "ооо", "оао"]
     company_regexp = rf"({'|'.join(legal_entities)})[\W]*"
@@ -43,12 +43,12 @@ if __name__ == "__main__":
     train = pd.read_csv(ROOT.joinpath("train.csv"), index_col="pair_id")
     train['name_1'] = train['name_1'].apply(preprocess)
     train['name_2'] = train['name_2'].apply(preprocess)
-    # train.to_csv(ROOT / 'train_cleared.csv')
+    train.to_csv(ROOT / 'train_cleared.csv')
 
     test = pd.read_csv(ROOT.joinpath("test.csv"), index_col="pair_id")
     test['name_1'] = test['name_1'].apply(preprocess)
     test['name_2'] = test['name_2'].apply(preprocess)
-    # test.to_csv(ROOT / 'test_cleared.csv')
+    test.to_csv(ROOT / 'test_cleared.csv')
 
     # # %%
     # df = pd.concat([train['name_1'], train['name_2']]).drop_duplicates()
