@@ -1,3 +1,4 @@
+# %%
 import re
 from pathlib import Path
 
@@ -5,17 +6,31 @@ import pandas as pd
 import pycountry
 
 countries = [country.name.lower() for country in pycountry.countries]
+countries += ["ceska republika", "polska", "brasil", "international", "usa",
+              "vietnam", "polynesie", "korea", "shanghai"]
 
 
 def preprocess(company: str) -> str:
     company = company.lower()
-    company = re.sub(r'[^\w\s]', '', company)
 
-    legal_entities = ["ltd", "co", "inc", "bv", "scrl", "gmbh", "pvt", "ооо",
-                      "industries", "industrial"]
-    company = re.sub("|".join(legal_entities), '', company)
+    legal_entities = ["ltd.", "co.", "inc.", "b.v.", "s.c.r.l.", "gmbh",
+                      "pvt.", "s.a.", "de c.v.", "c.v.",
+                      "ооо", "оао"]
+    company_regexp = rf"({'|'.join(legal_entities)})[\W]*"
+    company = re.sub(company_regexp, '', company)
 
-    company = re.sub("|".join(countries), '', company)
+    company = re.sub(r'[^\w\s]', ' ', company)
+
+    popular_words = ["энтерпрайс",
+                     "industries", "industrial", "industria",
+                     "international", "global", "logistics", "private",
+                     "corporation", "management"]
+
+    popular_regexp = rf"({'|'.join(popular_words)})[\W]*"
+    company = re.sub(popular_regexp, '', company)
+
+    countries_regexp = rf"({'|'.join(countries)})[\W]*"
+    company = re.sub(countries_regexp, '', company)
 
     company = company.strip()
     company = re.sub(r'\s{2,}', ' ', company)
@@ -34,3 +49,14 @@ if __name__ == "__main__":
     test['name_1'] = test['name_1'].apply(preprocess)
     test['name_2'] = test['name_2'].apply(preprocess)
     # test.to_csv(ROOT / 'test_cleared.csv')
+
+    # # %%
+    # df = pd.concat([train['name_1'], train['name_2']]).drop_duplicates()
+    # df = df.apply(lambda x: x.split(' '))
+
+    # # %%
+    # from itertools import chain
+    # from collections import Counter
+
+    # counts = Counter(chain.from_iterable(df.to_list()))
+    # counts.most_common(100)
