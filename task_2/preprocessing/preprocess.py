@@ -22,7 +22,7 @@ def preprocess(company: str) -> str:
 
     company = re.sub(r'[^\w\s]', ' ', company)
 
-    popular_words = ["энтерпрайс",
+    popular_words = ["энтерпрайс", "ооо",
                      "industries", "industrial", "industria",
                      "international", "global", "logistics", "private",
                      "corporation", "management", "consolidated", "trading"]
